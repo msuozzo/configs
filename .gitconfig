@@ -1,0 +1,16 @@
+[user]
+	name = Matthew Suozzo
+	email = matthew.suozzo@gmail.com
+[core]
+  editor = vim
+	excludesfile = /Users/matthewsuozzo/.gitignore
+[merge]
+  tool = vimdiff
+  keepBackup = false
+[alias]
+  ci = commit
+  st = status
+  unstage = reset HEAD --
+  clear = checkout --
+  last = log -1 HEAD
+  visual = !gitk

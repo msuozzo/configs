@@ -1,0 +1,14 @@
+.gitignore
+  -`git config --global core.excludesfile /path/to/.gitignore`
+
+.gitconfig
+  -Move to ~/
+  -Change excludesfile path
+
+.vimrc
+  -Move to ~/
+
+git-completion.bash
+  -Move to ~/.git-completion.sh
+  -Add the following line to your .bashrc:
+    source ~/.git-completion.sh
