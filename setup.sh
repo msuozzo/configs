@@ -12,4 +12,5 @@ function add_bashrc() {
 ln -f gitignore ~/.gitignore
 ln -f gitconfig ~/.gitconfig
 ln -f vimrc ~/.vimrc
+ln -f latexmkrc ~/.latexmkrc
 add_bashrc
