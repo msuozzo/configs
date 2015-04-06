@@ -8,7 +8,5 @@
 .vimrc
   -Move to ~/
 
-git-completion.bash
-  -Move to ~/.git-completion.sh
-  -Add the following line to your .bashrc:
-    source ~/.git-completion.sh
+.latexmkrc
+  -Move to ~/

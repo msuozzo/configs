@@ -1,5 +1,22 @@
-.DS\_Store
+## General/Vim
 .*.swp
 *~
 .*~
+
+## Mac
+.DS\_Store
+
+## Python
 *.py[co]
+
+## LaTeX
+*.fls
+*-blx.bib
+*.bbl
+*.blg
+*.fdb_latexmk
+*.aux
+*.run.xml
+*.out
+*.log
+

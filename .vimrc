@@ -34,9 +34,6 @@ else
 endif
 set history=50		" keep 50 lines of command line history
 set tabstop=2
-"set shell=/bin/bash
-"let $BASH_ENV="~/.bashrc"
-"set shellcmdflag=-c
 set shiftwidth=2
 set expandtab
 set wrap
