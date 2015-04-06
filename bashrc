@@ -10,9 +10,10 @@ cd() { builtin cd $@; ll; }
 
 
 ## Git 
-source /usr/local/git/contrib/completion/git-completion.bash
+GIT_PREFIX=/usr/local/git
+source $GIT_PREFIX/contrib/completion/git-completion.bash
 #### Prompt (Based on: http://ithaca.arpinum.org/2013/01/02/git-prompt.html)
-source /usr/local/git/contrib/completion/git-prompt.sh 
+source $GIT_PREFIX/contrib/completion/git-prompt.sh 
 get_sha() {
   git rev-parse --short HEAD 2>/dev/null
 }
