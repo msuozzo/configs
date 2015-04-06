@@ -8,6 +8,7 @@
   keepBackup = false
 [alias]
   ci = commit
+  cim = commit -m
   st = status
   unstage = reset HEAD --
   clear = checkout --
