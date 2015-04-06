@@ -1,7 +1,8 @@
 #!/bin/bash
 
+## RC
 function add_bashrc() {
-  SOURCE_STMT="source $(pwd)/bashrc"
+  SOURCE_STMT="source $(pwd)/rc/bashrc"
   RC_PATH=~/.bashrc
   if [[ -z $(grep "$SOURCE_STMT" $RC_PATH) ]]; then
     (echo $SOURCE_STMT; cat $RC_PATH) > tmp && \
@@ -9,8 +10,10 @@ function add_bashrc() {
   fi
 }
 
-ln -f gitignore ~/.gitignore
-ln -f gitconfig ~/.gitconfig
-ln -f vimrc ~/.vimrc
-ln -f latexmkrc ~/.latexmkrc
+ln -f rc/vimrc ~/.vimrc
+ln -f rc/latexmkrc ~/.latexmkrc
 add_bashrc
+
+## Git
+ln -f git/gitignore ~/.gitignore
+ln -f git/gitconfig ~/.gitconfig
