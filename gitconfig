@@ -3,7 +3,7 @@
 	email = matthew.suozzo@gmail.com
 [core]
   editor = vim
-	excludesfile = /Users/matthewsuozzo/.gitignore
+	excludesfile = ~/.gitignore
 [merge]
   tool = vimdiff
   keepBackup = false
