@@ -1,6 +1,5 @@
 [user]
 	name = Matthew Suozzo
-	email = matthew.suozzo@gmail.com
 [core]
   editor = vim
 	excludesfile = ~/.gitignore
@@ -14,3 +13,5 @@
   clear = checkout --
   last = log -1 HEAD
   visual = !gitk
+[push]
+  default = simple
