@@ -11,4 +11,5 @@ function add_bashrc() {
 
 ln -f gitignore ~/.gitignore
 ln -f gitconfig ~/.gitconfig
+ln -f vimrc ~/.vimrc
 add_bashrc
