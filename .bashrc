@@ -2,6 +2,8 @@
 
 ## builtin Aliases
 shopt -s expand_aliases
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced
 alias ll='ls -alFG'
 alias rm='rm -i $@'
 cd() { builtin cd $@; ll; }
