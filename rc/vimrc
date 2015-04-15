@@ -14,11 +14,12 @@ if v:progname =~? "evim"
   finish
 endif
 
-set t_kn=<BS>
-"map <BS> ^H
-"fixdel
-set mouse=n
-set tw=75
+" Fixes for backspace/delete weirdness
+" See :help fixdel
+"if &term == "???"
+"  set t_kb=
+"  fixdel
+"endif
 
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
@@ -33,12 +34,13 @@ else
   set backup		" keep a backup file
 endif
 set history=50		" keep 50 lines of command line history
+
+" Spacing preferences
 set tabstop=2
 set shiftwidth=2
 set expandtab
+
 set wrap
-set textwidth=0
-"set spell
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
@@ -48,6 +50,8 @@ set incsearch		" do incremental searching
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
+" One space after terminating punctuation
+set nojoinspaces
 
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
@@ -78,8 +82,10 @@ if has("autocmd")
   augroup vimrcEx
   au!
 
-  " For all text files set 'textwidth' to 78 characters.
+  " For all text files set 'textwidth' to 78 characters and enable
+  " spell-checking
   autocmd FileType text setlocal textwidth=78
+  autocmd FileType text setlocal spell
 
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
@@ -106,3 +112,8 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
 		  \ | wincmd p | diffthis
 endif
+
+" Copy/Paste macros
+" <C-v> only works in insert to prevent clobbering visual block
+vnoremap <C-c> :w !pbcopy<CR><CR>
+inoremap <C-v> <ESC>:r !pbpaste<CR><CR>i
