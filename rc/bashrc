@@ -4,9 +4,18 @@
 shopt -s expand_aliases
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
+alias rm='rm -i'
 alias ll='ls -alFG'
-alias rm='rm -i $@'
 cd() { builtin cd $@; ll; }
+# get read
+if [[ `uname` -eq 'Darwin' ]]; then
+  function realpath() {
+    python -c "import os; print os.path.realpath(\"$1\")"
+  }
+  alias realpath=realpath
+else
+  alias realpath='readlink -f'
+fi
 
 
 ## Git 

@@ -117,3 +117,5 @@ endif
 " <C-v> only works in insert to prevent clobbering visual block
 vnoremap <C-c> :w !pbcopy<CR><CR>
 inoremap <C-v> <ESC>:r !pbpaste<CR><CR>i
+" Just take the first suggestion
+noremap zm 1z=
