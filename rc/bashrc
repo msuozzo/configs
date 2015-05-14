@@ -7,7 +7,7 @@ export LSCOLORS=GxFxCxDxBxegedabagaced
 alias rm='rm -i'
 alias ll='ls -alFG'
 cd() { builtin cd $@; ll; }
-# get read
+# realpath: get real, absolute path
 if [[ `uname` -eq 'Darwin' ]]; then
   function realpath() {
     python -c "import os; print os.path.realpath(\"$1\")"
@@ -15,6 +15,14 @@ if [[ `uname` -eq 'Darwin' ]]; then
   alias realpath=realpath
 else
   alias realpath='readlink -f'
+fi
+# define: get word definitions
+if [[ `uname` -eq 'Darwin' ]]; then
+  define() { open dict://$1; }
+elif [[ `uname` -eq 'Linux' && ! -z `which dict` ]]; then
+  define() { dict -d gcide $1; }
+else
+  define() { echo define command not supported; }
 fi
 
 
