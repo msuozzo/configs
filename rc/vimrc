@@ -10,7 +10,7 @@
 "	    for OpenVMS:  sys$login:.vimrc
 
 
-""""""""""""""""""""""VUNDLE""""""""""""""""""""""""""
+""""""""""""""""""""VUNDLE"""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -41,10 +41,14 @@ Plugin 'wincent/Command-T'
 " Avoid a name conflict with L9
 "Plugin 'user/L9', {'name': 'newL9'}
 "
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'rust-lang/rust.vim'
-Plugin 'rdnetto/YCM-Generator'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'rdnetto/YCM-Generator'
+Plugin 'Raimondi/delimitMate'
+Plugin 'scrooloose/syntastic'
+Plugin 'rust-lang/rust.vim'
+Plugin 'fatih/vim-go'
+Plugin 'derekwyatt/vim-scala'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -61,12 +65,35 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+""""""""""""""""YouCompleteMe""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ycm_confirm_extra_conf = 0
+au FileType python nnoremap <leader>jd :YcmCompleter GoTo<CR>
 
+""""""""""""""""Syntastic""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_python_checkers = ['pylint']
+let g:syntastic_python_python_exec = system('which python')
+let g:syntastic_go_checkers=['']
+
+""""""""""""""""Vim-Go"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>s <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+au FileType go nmap <Leader>e <Plug>(go-rename)
+
+""""""""""""""""Regular Vim Settings"""""""""""""""""""""""""""""""""""""""""""
 syntax on
-" Highlight search
+" Highlight search matches
 set hlsearch
 set mouse=a
 
@@ -79,7 +106,6 @@ set backspace=indent,eol,start
 " Spacing preferences
 set expandtab
 set tabstop=4
-set shiftwidth=0
 set textwidth=78
 set wrap
 
@@ -93,8 +119,7 @@ set incsearch
 set history=50
 set backup
 
-
-" Only do this part when compiled with support for autocommands.
+""""""""""""""""AutoCommand""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("autocmd")
 
   " Enable file type detection.
@@ -126,15 +151,34 @@ if has("autocmd")
 
 endif " has("autocmd")
 
-
-
+""""""""""""""""Macros"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Copy/Paste macros
-" <C-v> only works in insert to prevent clobbering visual block
+" <C-v> only works in insert to prevent clobbering the visual block command
 vnoremap <C-c> :w !pbcopy<CR><CR>
 inoremap <C-v> <ESC>:r !pbpaste<CR><CR>i
-" Just take the first suggestion
+
+" Take the first spell-check suggestion
 noremap zm 1z=
+
 " Because I always capitalize W
 cnoreabbrev W w
 cnoreabbrev Wq wq
 cnoreabbrev WQ wq
+
+" Open 'Normal Mode' command editor by default
+nnoremap : q:i
+nnoremap / q/i
+nnoremap ? q?i
+
+" Helpful save macro
+nnoremap ,, :w<cr>
+
+" Disable arrow keys
+noremap  <Up> ""
+noremap! <Up> <Esc>
+noremap  <Down> ""
+noremap! <Down> <Esc>
+noremap  <Left> ""
+noremap! <Left> <Esc>
+noremap  <Right> ""
+noremap! <Right> <Esc>
