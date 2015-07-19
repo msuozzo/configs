@@ -1,0 +1,4 @@
+#!/bin/bash
+# This hook is run after every virtualenv is activated.
+OLD_PROMPT=$PROMPT_COMMAND
+PROMPT_COMMAND=$(echo $PROMPT_COMMAND | sed "s/\\\\u/(`basename \$VIRTUAL_ENV`)\\\\u/")

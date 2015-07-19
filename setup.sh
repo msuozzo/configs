@@ -17,3 +17,10 @@ add_bashrc
 ## Git
 ln -f git/gitignore ~/.gitignore
 ln -f git/gitconfig ~/.gitconfig
+
+## Virtualenv
+VENV_DIR=~/.virtualenvs
+if [[ -e $VENV_DIR ]]; then
+  ln -f virtualenv/postactivate $VENV_DIR/postactivate
+  ln -f virtualenv/postdeactivate $VENV_DIR/postdeactivate
+fi
