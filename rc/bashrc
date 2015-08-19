@@ -6,7 +6,7 @@ export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 alias rm='rm -i'
 alias ll='ls -alFG'
-cd() { builtin cd "$@"; ll; }
+cd() { builtin cd "$@" && ll; }
 # realpath: get real, absolute path
 if [[ `uname` -eq 'Darwin' ]]; then
   function realpath() {
