@@ -1,5 +1,5 @@
 [user]
-	name = Matthew Suozzo
+    name = Matthew Suozzo
 [core]
     editor = vim
     excludesfile = ~/.gitignore
