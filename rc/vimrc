@@ -14,6 +14,9 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" include fzf in the runtime path
+set rtp+=~/.fzf
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -32,7 +35,6 @@ Plugin 'tpope/vim-fugitive'
 "Plugin 'L9'
 " Git plugin not hosted on GitHub
 "Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'wincent/Command-T'
 " git repos on your local machine (i.e. when working on your own plugin)
 "Plugin 'file:///home/gmarik/path/to/plugin'
 " The sparkup vim script is in a subdirectory of this repo called vim.
@@ -50,6 +52,7 @@ Plugin 'rust-lang/rust.vim'
 Plugin 'fatih/vim-go'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'wookiehangover/jshint.vim'
+Plugin 'junegunn/fzf', { 'rtp': '~/.fzf', 'do': './install --all' }
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -99,6 +102,11 @@ au FileType go nmap <Leader>e <Plug>(go-rename)
 
 """""""""""""   JSHint   """"""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:JSHintHighlightErrorLine = 0
+
+"""""""""""""   FZF   """""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <leader>r :FZF!<cr>
+nnoremap <leader>t :tabe<cr>:FZF!<cr>
+nnoremap <leader>v :vsp<cr>:FZF!<cr>
 
 """"""""""""""""Regular Vim Settings"""""""""""""""""""""""""""""""""""""""""""
 syntax on

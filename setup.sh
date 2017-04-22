@@ -24,3 +24,7 @@ if [[ -e $VENV_DIR ]]; then
   ln -f virtualenv/postactivate $VENV_DIR/postactivate
   ln -f virtualenv/postdeactivate $VENV_DIR/postdeactivate
 fi
+
+## FZF
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
