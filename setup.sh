@@ -6,7 +6,7 @@ function add_bashrc() {
   RC_PATH=~/.bashrc
   if [[ -z $(grep "$SOURCE_STMT" $RC_PATH) ]]; then
     (echo $SOURCE_STMT; cat $RC_PATH) > tmp && \
-    mv tmp $RC_PATH
+      mv tmp $RC_PATH
   fi
 }
 
