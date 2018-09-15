@@ -50,16 +50,12 @@ Plugin 'Raimondi/delimitMate'
 Plugin 'scrooloose/syntastic'
 Plugin 'rust-lang/rust.vim'
 Plugin 'fatih/vim-go'
-Plugin 'derekwyatt/vim-scala'
 Plugin 'wookiehangover/jshint.vim'
+Plugin 'mlr-msft/vim-loves-dafny', {'for': 'dafny'}
 Plugin 'junegunn/fzf', { 'rtp': '~/.fzf', 'do': './install --all' }
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
 " Brief help
 " :PluginList       - lists configured plugins
 " :PluginInstall    - installs plugins; :PluginUpdate to update
@@ -122,7 +118,9 @@ set backspace=indent,eol,start
 
 " Spacing preferences
 set expandtab
-set tabstop=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set textwidth=78
 set wrap
 
@@ -136,6 +134,9 @@ set incsearch
 set history=50
 set backup
 
+set swapfile
+set dir=~/.vim/cache
+
 """"""""""""""""AutoCommand""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("autocmd")
 
@@ -144,15 +145,19 @@ if has("autocmd")
   " 'cindent' is on in C files, etc.
   " Also load indent files, to automatically do language-dependent indenting.
   filetype plugin indent on
+  filetype plugin on
 
   " Put these in an autocmd group, so that we can delete them easily.
   augroup vimrcEx
   au!
 
-  " For all text files set 'textwidth' to 78 characters and enable
-  " spell-checking
+  " For all text files set 'textwidth' to 78 characters
   autocmd FileType text setlocal textwidth=78
-  autocmd FileType text setlocal spell
+
+  " For python, make sure tw is 2.
+  autocmd FileType python setlocal tabstop=2
+  autocmd FileType python setlocal softtabstop=2
+  autocmd FileType python setlocal shiftwidth=2
 
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
@@ -171,8 +176,16 @@ endif " has("autocmd")
 """"""""""""""""Macros"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Copy/Paste macros
 " <C-v> only works in insert to prevent clobbering the visual block command
-vnoremap <C-c> :w !pbcopy<CR><CR>
-inoremap <C-v> <ESC>:r !pbpaste<CR><CR>i
+if has("unix")
+  let s:uname = system("uname -s")
+  if s:uname == "Darwin"
+    vnoremap <C-c> "+y
+    inoremap <C-v> "+p
+  else
+    vnoremap <C-c> :w !pbcopy<CR><CR>
+    inoremap <C-v> <ESC>:r !pbpaste<CR><CR>i
+  endif
+endif
 
 " Take the first spell-check suggestion
 noremap zm 1z=
@@ -202,3 +215,14 @@ noremap  <Left> ""
 noremap! <Left> <Esc>
 noremap  <Right> ""
 noremap! <Right> <Esc>
+
+" Move home row over to relax hand position
+noremap  ; l
+noremap  l k
+noremap  k j
+noremap  j h
+noremap  h ""
+noremap <C-w>; <C-w>l
+noremap <C-w>l <C-w>k
+noremap <C-w>k <C-w>j
+noremap <C-w>j <C-w>h
