@@ -16,5 +16,8 @@
     clear = checkout --
     last = log -1 HEAD
     visual = !gitk
+    l = log --graph --decorate --oneline -n20
+    xl = log --graph --decorate --oneline
+    d = log -p -n 1
 [push]
     default = current
