@@ -11,7 +11,6 @@ function add_bashrc() {
 }
 
 ln -f rc/vimrc ~/.vimrc
-ln -f rc/latexmkrc ~/.latexmkrc
 add_bashrc
 
 ## Git
