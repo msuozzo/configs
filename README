@@ -1,9 +1,3 @@
-.gitignore
-  -`git config --global core.excludesfile /path/to/.gitignore`
+# configs
 
-.gitconfig
-  -Move to ~/
-  -Change excludesfile path
-
-.vimrc
-  -Move to ~/
+Personal configurations for all the various and sundry tools that get use.
