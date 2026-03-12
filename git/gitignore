@@ -10,8 +10,6 @@
 *.py[co]
 *.egg
 *.egg-info
-# virtualenv
-.env
 
 ## Rust
 Cargo.lock
