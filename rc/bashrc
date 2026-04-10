@@ -210,3 +210,4 @@ jjwatch() {
   watch -t -n .5 --color -x bash -c 'jj log --color always'
 }
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
