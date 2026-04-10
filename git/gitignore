@@ -27,3 +27,6 @@ Cargo.lock
 
 ## YCM
 .ycm_extra_conf.py
+ 
+# VCS
+.jj/
