@@ -134,6 +134,11 @@ set grepprg=rg\ --vimgrep
 """""""""""""  codefmt  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'msuozzo/vim-codefmt', { 'branch': 'tip' }
 
+"""""""""""""  copying  """""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'ojroques/vim-oscyank'        " OSC 52 copy support
+
+vnoremap <leader>c :OSCYankVisual<CR>
+
 "^^^^^^^^^^^^  END vim-plug END  "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 call plug#end()                  "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 "^^^^^^^^^^^^  END vim-plug END  "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
