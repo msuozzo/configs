@@ -9,6 +9,13 @@ for f in rc/bashrc rc/vimrc git/gitconfig git/gitignore; do
 done
 mkdir -p "${HOME}/.config/jj"
 ln -f --symbolic "${config_dir}/jj/config.toml" "${HOME}/.config/jj/config.toml"
+for p in ${config_dir}/confd_*.toml; do
+  mkdir -p "${HOME}/.config/jj/conf.d/"
+  fname=$(basename "$p")
+  ln -f --symbolic \
+    "$p" \
+    "${HOME}/.config/jj/conf.d/${fname#confd_}"
+done
 
 ## FZF
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
