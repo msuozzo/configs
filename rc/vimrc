@@ -32,25 +32,15 @@ set pastetoggle=<leader>p
 " Enable 24-bit colors
 set termguicolors
 
-""""""""""""""""""""VUNDLE"""""""""""""""""""""""""""""""""""""""""""""""""""""
-filetype off                  " required
-
-" include fzf in the runtime path
-set rtp+=~/.fzf
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-Plugin 'Raimondi/delimitMate'
-Plugin 'neoclide/coc.nvim', { 'branch': 'release' }
-Plugin 'junegunn/fzf', { 'rtp': '~/.fzf', 'do': './install --all' }
-Plugin 'junegunn/fzf.vim'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""  vim-plug  """""""""""""""""""""""""""""""""""""""""""""""""""
+call plug#begin('~/.vim/plugged')
+Plug 'Raimondi/delimitMate'
+Plug 'google/vim-maktaba'
+Plug 'msuozzo/vim-codefmt', { 'branch': 'tip' }
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'junegunn/fzf', { 'rtp': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+call plug#end()
 
 """""""""""""   coc.nvim   """"""""""""""""""""""""""""""""""""""""""""""""""""
 
