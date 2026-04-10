@@ -134,6 +134,15 @@ set grepprg=rg\ --vimgrep
 """""""""""""  codefmt  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'msuozzo/vim-codefmt', { 'branch': 'tip' }
 
+"""""""""""""  NERDCommenter  """""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'scrooloose/nerdcommenter'
+
+" Default mappings use '<leader>c' which collides with copying.
+let g:NERDCreateDefaultMappings=0
+let g:NERDDefaultAlign='left'
+map <leader>mm <Plug>NERDCommenterToggle
+map <leader>ms <Plug>NERDCommenterMinimal
+
 """""""""""""  copying  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'ojroques/vim-oscyank'        " OSC 52 copy support
 
