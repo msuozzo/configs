@@ -109,34 +109,34 @@ nnoremap <leader>v :vsp<cr>:FZF!<cr>
 syntax on
 " Highlight search matches
 set hlsearch
+" Enable mouse
 set mouse=a
-
 " One space after terminating punctuation
 set nojoinspaces
-
-" allow backspacing over everything in insert mode
+" Allow backspacing over everything in insert mode.
 set backspace=indent,eol,start
-
 " Spacing preferences
 set expandtab
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set textwidth=78
+set tabstop=4
+set shiftwidth=0
 set wrap
-
-" show the cursor position all the time
+"" Don't force code wrapping
+set textwidth=0
+set wrapmargin=0
+" Show the cursor position all the time
 set ruler
-" display incomplete commands
+" Display incomplete commands
 set showcmd
-" do incremental searching
+" Do incremental searching
 set incsearch
-
-set history=50
+" Number of history lines to keep for various vim buffers
+set history=100
+" Create backups for files
 set backup
-
-set swapfile
-set dir=~/.vim/cache
+" Command to toggle paste mode
+set pastetoggle=<leader>p
+" Enable 24-bit colors
+set termguicolors
 
 """"""""""""""""AutoCommand""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("autocmd")
