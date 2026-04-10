@@ -2,7 +2,7 @@
 
 ## RC
 config_dir=$(dirname "$(readlink -f "$0")")
-for f in rc/bashrc rc/vimrc git/gitconfig git/gitignore; do
+for f in rc/bashrc rc/vimrc rc/ignore git/gitconfig git/gitignore; do
   ln -f --symbolic \
     "${config_dir}/${f}" \
     "${HOME}/.$(basename "${f}")"
