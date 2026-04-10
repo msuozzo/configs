@@ -50,3 +50,192 @@ pyhelp() {
   fi
 }
 export -f pyhelp
+
+## jj
+alias jjn='jjco "@-+ ~ empty()"'
+alias jjnn='jjco "@-++ ~ empty()"'
+alias jjnnn='jjco "@-+++ ~ empty()"'
+alias jjp='jjco "@--"'
+alias jjpp='jjco "@---"'
+alias jjppp='jjco "@----"'
+alias jjcs="jj split -r 'latest(mutable()&ancestors(@)~empty())'"
+alias jja="jj amend"
+alias jjai="jj amend -i"
+alias jjt="jj diff -s"
+jjtt() {
+  REV="${1:-current}"
+  jj diff -s --from "parents(roots($REV))" --to "heads($REV)"
+}
+alias jjd="jj diff"
+jjdd() {
+  REV="${1:-current}"
+  jj diff --from "parents(roots($REV))" --to "heads($REV)"
+}
+jju() {
+  REV="${1:-roots(current)}"
+  BOOKMARK=$(jj log --no-graph -r "$REV" -T 'bookmarks.join("\n")' 2>/dev/null | head -1 | tr -d '*')
+  if [[ "$BOOKMARK" == "$REV" ]]; then
+    jj git push -b "$BOOKMARK"
+  else
+    jj forge review update --skip-check "${REV}"
+    # NOTE: After update so trailer updates don't invalidate check results.
+    jj forge change check --detach "${REV}"
+  fi
+}
+jjuc() {
+  REV="${1:-roots(current)}"
+  jj forge review update --skip-check "::(${REV})&mutable()"
+  # NOTE: After update so trailer updates don't invalidate check results.
+  jj forge change check --detach "::(${REV})&mutable()"
+}
+jjps() {
+  REV="${1:-roots(current)}"
+  jj forge change check "${REV}"
+}
+jjpsc() {
+  REV="${1:-roots(current)}"
+  jj forge change check "::(${REV})&mutable()"
+}
+jjrm() {
+  REV="${1:-roots(current)}"
+  # Resolve to unique change and, if present, bookmark
+  changes=$(jj log -r "$REV" --no-graph -T 'change_id.short() ++ " "')
+  change_count=$(echo "$changes" | wc -w)
+  if [[ $change_count -eq 0 ]]; then
+    echo "rev not found" >&2
+    return 1
+  fi
+  if [[ $change_count -gt 1 ]]; then
+    echo "rev not unique" >&2
+    return 1
+  fi
+  bookmarks=$(jj log -r "$changes" --no-graph -T 'bookmarks.map(|b| b.name()).join(" ")')
+  bookmark_count=$(echo "$bookmarks" | wc -w)
+  if [[ $bookmark_count -gt 1 ]]; then
+    echo "multiple bookmarks found" >&2
+    return 1
+  elif [[ $bookmark_count -eq 1 ]]; then
+    pr_url=$(GIT_DIR=.jj/repo/store/git/ gh pr list --head "$bookmarks" --json url --jq '.[0].url' 2> /dev/null)
+    if [[ "$pr_url" != "" ]]; then
+      echo "Found Pull Request: $pr_url"
+      read -p "CLOSE this PR? (y/N) " -n 1 -r
+      echo
+      if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
+        echo "Operation cancelled."
+        return 0
+      fi
+      jj forge review close --no-cleanup "${REV}"
+      if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to close the pull request." >&2
+        return 1
+      fi
+    fi
+    jj bookmark delete "$bookmarks"
+    # NOTE: If the branch was never pushed, suppress failure.
+    jj git push --bookmark "$bookmarks" || true
+  fi
+  jj abandon "$changes"
+}
+alias jjau="jja && jju"
+jjua() {
+  jj git push --tracked
+}
+jjom() {
+  vim -p $(jj diff --name-only -r "${1:-current}")
+}
+jjco() {
+  jj new "${1:-heads(current)}"
+}
+jjrb() {
+  if [[ "$1" == "" ]] || [[ "$2" == "" ]]; then
+    exit 1
+  fi
+  jj rebase -s "${1}" -d "${2}"
+}
+jjq() {
+  FROM="${1:-roots(current)}"
+  TO="${2}"
+  if [[ "$TO" == "" ]]; then
+    jj squash -r "$FROM"
+  else
+    jj squash --from "$FROM" --into "$TO"
+  fi
+}
+jjqi() {
+  FROM="${1:-roots(current)}"
+  TO="${2}"
+  if [[ "$TO" == "" ]]; then
+    jj squash --interactive -r "$FROM"
+  else
+    jj squash --interactive --from "$FROM" --into "$TO"
+  fi
+}
+jjcm() {
+  jj commit -m "$*"
+}
+jjcmi() {
+  jj commit -i -m "$*"
+}
+jjrw() {
+  REV="${1:-coalesce(@ ~ empty(), @-)}"
+  if [[ "$REV" == "" ]]; then
+    echo 'Usage: jjrw <REV>'
+    return 1
+  fi
+  jj describe "${REV}"
+}
+jjra() {
+  jj restore --from @-
+}
+jjral() {
+  jj restore --from @--
+}
+jjri() {
+  jj restore -i --from @-
+}
+jjril() {
+  jj restore -i --from @--
+}
+jjm() {
+  USR="${1}"
+  REV="${2:-@-}"
+  if [[ "$USR" == "" ]]; then
+    jj forge review open --reviewer "${USR}" "${REV}"
+  else 
+    jj forge review open "${REV}"
+  fi 
+}
+jjmc() {
+  USR="${1}"
+  REV="${2:-@-}"
+  chain="::($REV)&mutable()"
+  if [[ "$USR" == "" ]]; then
+    jj forge review open --reviewer "${USR}" "${chain}"
+  else 
+    jj forge review open "${chain}"
+  fi 
+}
+jjsb() {
+  REV="${1:-coalesce(@&~description(exact:''),@-)}"
+  # NOTE: REV can become ambiguous after merge. Resolving heads first removes this ambiguity.
+  headrevset="$(jj log -r 'latest(immutable()&ancestors('"$REV"'))' -G -T 'change_id.short() ++ "|"')none()"
+  jj forge review merge "${REV}" && \
+    jjs "mutable()&children(${headrevset})"
+}
+jjs() {
+  REV="${1:-roots(current)}"
+  jj git fetch
+  # NOTE: REV can become ambiguous after rebase --skip-emptied. Need to wrap
+  # each change with present() to ensure simplify-parents can be evaluated.
+  rbrevset="$(jj log -r "roots(immutable()..(${REV}))&mutable()" -G -T 'change_id.short() ++ "|"')none()"
+  jj rebase --skip-emptied -s "${rbrevset}" -d "local_heads()"
+  falliblerevset="$(echo -n "${rbrevset}" | xargs -d'|' printf 'present(%s)|')none()"
+  jj simplify-parents -r "mutable()&descendants(${falliblerevset})"
+}
+jjsh() {
+  jjs 'mutable()&children(latest(immutable()&ancestors(@)))'
+}
+jjwatch() {
+  watch -t -n .5 --color -x bash -c 'jj log --color always'
+}
+
