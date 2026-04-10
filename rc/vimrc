@@ -1,5 +1,38 @@
-""""""""""""""""""""VUNDLE"""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""  General Settings  """""""""""""""""""""""""""""""""""""""""""
 set nocompatible              " be iMproved, required
+syntax on
+" Highlight search matches
+set hlsearch
+" Enable mouse
+set mouse=a
+" One space after terminating punctuation
+set nojoinspaces
+" Allow backspacing over everything in insert mode.
+set backspace=indent,eol,start
+" Spacing preferences
+set expandtab
+set tabstop=4
+set shiftwidth=0
+set wrap
+"" Don't force code wrapping
+set textwidth=0
+set wrapmargin=0
+" Show the cursor position all the time
+set ruler
+" Display incomplete commands
+set showcmd
+" Do incremental searching
+set incsearch
+" Number of history lines to keep for various vim buffers
+set history=100
+" Create backups for files
+set backup
+" Command to toggle paste mode
+set pastetoggle=<leader>p
+" Enable 24-bit colors
+set termguicolors
+
+""""""""""""""""""""VUNDLE"""""""""""""""""""""""""""""""""""""""""""""""""""""
 filetype off                  " required
 
 " include fzf in the runtime path
@@ -108,39 +141,6 @@ autocmd SwapExists * let v:swapchoice = 'e'
 
 " rg-ify search
 set grepprg=rg\ --vimgrep
-
-""""""""""""""""Regular Vim Settings"""""""""""""""""""""""""""""""""""""""""""
-syntax on
-" Highlight search matches
-set hlsearch
-" Enable mouse
-set mouse=a
-" One space after terminating punctuation
-set nojoinspaces
-" Allow backspacing over everything in insert mode.
-set backspace=indent,eol,start
-" Spacing preferences
-set expandtab
-set tabstop=4
-set shiftwidth=0
-set wrap
-"" Don't force code wrapping
-set textwidth=0
-set wrapmargin=0
-" Show the cursor position all the time
-set ruler
-" Display incomplete commands
-set showcmd
-" Do incremental searching
-set incsearch
-" Number of history lines to keep for various vim buffers
-set history=100
-" Create backups for files
-set backup
-" Command to toggle paste mode
-set pastetoggle=<leader>p
-" Enable 24-bit colors
-set termguicolors
 
 """"""""""""""""AutoCommand""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("autocmd")
