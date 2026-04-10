@@ -1,0 +1,104 @@
+[user]
+name = "Matthew Suozzo"
+
+[git]
+subprocess = true
+colocate = false
+
+[signing]
+behavior = "own"
+backend = "ssh"
+
+[revsets]
+log = "pending() | parents(pending()) | trunk() | remote_heads() | local_heads()"
+
+[aliases]
+forge = ["util", "exec", "--", "go", "run", "github.com/msuozzo/jj-forge/cmd/jj-forge@latest"]
+watch = ["util", "exec", "--", "go", "run", "github.com/msuozzo/uwatch@latest", "jj", "log", "--color=always"]
+amend = ["squash"]
+
+[revset-aliases]
+"local_heads()" = '''
+  bookmarks(exact:"main") |
+  bookmarks(exact:"master") |
+  bookmarks(exact:"trunk")
+'''
+"remote_heads()" = 'origin_head() | upstream_head()'
+"origin_head()" = '''
+  remote_bookmarks(exact:"main", exact:"og") |
+  remote_bookmarks(exact:"master", exact:"og") |
+  remote_bookmarks(exact:"trunk", exact:"og") |
+  remote_bookmarks(exact:"main", exact:"origin") |
+  remote_bookmarks(exact:"master", exact:"origin") |
+  remote_bookmarks(exact:"trunk", exact:"origin")
+'''
+"upstream_head()" = '''
+  remote_bookmarks(exact:"main", exact:"up") |
+  remote_bookmarks(exact:"master", exact:"up") |
+  remote_bookmarks(exact:"trunk", exact:"up") |
+  remote_bookmarks(exact:"main", exact:"upstream") |
+  remote_bookmarks(exact:"master", exact:"upstream") |
+  remote_bookmarks(exact:"trunk", exact:"upstream")
+'''
+"trunk()" = "latest(remote_heads() | root())"
+t = "latest(heads(trunk()::~@))"
+h = "heads(::@ & remote_heads())"
+at = "@"
+current = 'coalesce(@&~description(exact:""), @|@-)'
+"named_head()" = 'heads(::@ & description(glob:"?*"))'
+"pending()" = "mine() & mutable()"
+
+[ui]
+graph.style = "ascii"
+editor = "vim"
+default-command = "diff"
+merge-editor = ":builtin"
+diff-editor = ":builtin"
+
+[template-aliases]
+# Only display the author when it's not the current user and try to localize the email by domain
+'format_short_signature(signature)' = '''
+if(signature.email(),
+  if(immutable || signature.email() != config("user.email").as_string(),
+    if(config("user.email").as_string().ends_with("@" ++ signature.email().domain()),
+      signature.email().local(),
+      signature.email())),
+  email_placeholder)
+'''
+# Remove parens from labels
+'format_commit_labels(commit)' = '''
+separate(" ",
+  coalesce(
+    if(commit.hidden(), label("hidden", "hidden")),
+    if(commit.divergent(), label("divergent", "divergent")),
+  ),
+  if(commit.conflict(), label("conflict", "conflict")),
+)
+'''
+# Abbreviate default push name
+'format_commit_bookmarks(commit)' = '''
+commit.bookmarks().map(|bookmark| concat(
+  if(!bookmark.name().remove_prefix("push-").remove_suffix(commit.change_id().short(12)),
+    "push…",
+    bookmark.name()),
+  if(bookmark.remote(),
+    "@"++bookmark.remote(),
+    if(!bookmark.synced(), "*"))
+  )
+)
+'''
+'format_short_commit_header(commit)' = '''
+separate(" ",
+  format_short_change_id_with_change_offset(commit),
+  format_forge_change(commit),
+  format_forge_check(commit),
+  format_short_signature(commit.author()),
+  if(immutable, commit.committer().timestamp().local().ago()),
+  format_commit_bookmarks(commit),
+  commit.tags(),
+  commit.working_copies(),
+  format_short_commit_id(commit.commit_id()),
+  format_commit_labels(commit)
+)
+'''
+
