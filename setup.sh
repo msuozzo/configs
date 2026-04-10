@@ -1,22 +1,14 @@
 #!/bin/bash
 
 ## RC
-function add_bashrc() {
-  SOURCE_STMT="source $(pwd)/rc/bashrc"
-  RC_PATH=~/.bashrc
-  if [[ -z $(grep "$SOURCE_STMT" $RC_PATH) ]]; then
-    (echo $SOURCE_STMT; cat $RC_PATH) > tmp && \
-      mv tmp $RC_PATH
-  fi
-}
-
-ln -f rc/vimrc ~/.vimrc
-add_bashrc
-
-## Git
-ln -f git/gitignore ~/.gitignore
-ln -f git/gitconfig ~/.gitconfig
+config_dir=$(dirname "$(readlink -f "$0")")
+for f in rc/bashrc rc/vimrc git/gitconfig git/gitignore; do
+  ln -f --symbolic \
+    "${config_dir}/${f}" \
+    "${HOME}/.$(basename "${f}")"
+done
+mkdir -p "${HOME}/.config/jj"
+ln -f --symbolic "${config_dir}/jj/config.toml" "${HOME}/.config/jj/config.toml"
 
 ## FZF
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
