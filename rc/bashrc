@@ -6,6 +6,7 @@ export CLICOLOR=1
 alias rm='rm -i'
 alias ls='ls --color=auto'
 alias ll='ls -alFG'
+alias grep='rg'
 cd() { builtin cd "$@" && ll; }
 # realpath: get real, absolute path
 if [[ `uname` -eq 'Darwin' ]]; then
