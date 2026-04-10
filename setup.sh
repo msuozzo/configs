@@ -9,7 +9,7 @@ for f in rc/bashrc rc/vimrc rc/ignore git/gitconfig git/gitignore; do
 done
 mkdir -p "${HOME}/.config/jj"
 ln -f --symbolic "${config_dir}/jj/config.toml" "${HOME}/.config/jj/config.toml"
-for p in ${config_dir}/confd_*.toml; do
+for p in ${config_dir}/jj/confd_*.toml; do
   mkdir -p "${HOME}/.config/jj/conf.d/"
   fname=$(basename "$p")
   ln -f --symbolic \
