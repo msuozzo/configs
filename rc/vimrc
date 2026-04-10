@@ -108,7 +108,7 @@ let g:coc_user_config = {
   \}
 
 """""""""""""   FZF   """""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'junegunn/fzf', { 'rtp': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 nnoremap <leader>t v:<bs><bs><bs><bs><bs>FZF!<cr>
