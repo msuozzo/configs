@@ -44,14 +44,8 @@ Plugin 'tpope/vim-fugitive'
 "Plugin 'user/L9', {'name': 'newL9'}
 "
 Plugin 'flazz/vim-colorschemes'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'rdnetto/YCM-Generator'
 Plugin 'Raimondi/delimitMate'
-Plugin 'scrooloose/syntastic'
-Plugin 'rust-lang/rust.vim'
-Plugin 'fatih/vim-go'
-Plugin 'wookiehangover/jshint.vim'
-Plugin 'mlr-msft/vim-loves-dafny', {'for': 'dafny'}
+Plugin 'neoclide/coc.nvim', { 'branch': 'release' }
 Plugin 'junegunn/fzf', { 'rtp': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 
@@ -68,37 +62,74 @@ call vundle#end()            " required
 " Put your non-Plugin stuff after this line
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"""""""""""""   YouCompleteMe    """"""""""""""""""""""""""""""""""""""""""""""
-let g:ycm_confirm_extra_conf = 0
-au FileType python nnoremap <leader>jd :YcmCompleter GoTo<CR>
+"""""""""""""   coc.nvim   """"""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
+" Trigger CursorHold more often.
+set updatetime=1000
+" Suppress completion status messages.
+set shortmess+=c
 
-"""""""""""""   Syntastic   """""""""""""""""""""""""""""""""""""""""""""""""""
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" Define macros for COC actions.
+nnoremap <silent> L <Plug>(coc-diagnostic-prev)
+nnoremap <silent> K <Plug>(coc-diagnostic-next)
+nnoremap <leader>dd <Plug>(coc-definition)
+nnoremap <leader>dt <Plug>(coc-type-definition)
+nnoremap <leader>di <Plug>(coc-implementation)
+nnoremap <leader>dr <Plug>(coc-references)
+nnoremap <leader>da <Plug>(coc-codeaction)
+nnoremap <leader>df <Plug>(coc-fix-current)
+nnoremap <leader>ds <Plug>(coc-rename)
+nnoremap <leader>dh :call ShowDocumentation()<CR>
+function! ShowDocumentation()
+  if CocHasProvider('hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_python_checkers = ['pylint']
-let g:syntastic_python_python_exec = system('which python')
-let g:syntastic_go_checkers = ['']
-let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_loc_list_height = 5
+" Make <TAB> cycle through completion options but retain the ability to indent
+" when preceded by whitespace.
+function! s:has_preceding_whitespace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ coc#inline#visible() ? coc#inline#accept() :
+      \ <SID>has_preceding_whitespace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-"""""""""""""   Vim-Go   """"""""""""""""""""""""""""""""""""""""""""""""""""""
-au FileType go nmap <leader>r <Plug>(go-run)
-au FileType go nmap <leader>b <Plug>(go-build)
-au FileType go nmap <leader>s <Plug>(go-test)
-au FileType go nmap <leader>c <Plug>(go-coverage)
-au FileType go nmap <Leader>e <Plug>(go-rename)
+" Make <c-space> also trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
 
-"""""""""""""   JSHint   """"""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:JSHintHighlightErrorLine = 0
+" Make <CR> auto-select the first completion item and notify coc.nvim.
+inoremap <silent><expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+
+" Disable suggestions in command win to avoid conflicts with native completion
+" and auto-complete on simple cmds like 'q'.
+autocmd CmdwinEnter * let b:coc_suggest_disable = 1
+
+let g:coc_user_config = {
+  \ 'languageserver': {
+  \   "gopls": {
+  \     "command": "gopls",
+  \     "rootPatterns": [".jj/", ".git/"],
+  \     "filetypes": ["go"],
+  \     "initializationOptions": {
+  \       "usePlaceholders": v:true
+  \     }
+  \   }
+  \ },
+  \ 'preferences.semanticTokensHighlights': 0,
+  \ 'diagnostic.errorSign': '•',
+  \ 'diagnostic.warningSign': '•'
+  \}
 
 """""""""""""   FZF   """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <leader>t v:<bs><bs><bs><bs><bs>FZF!<cr>
