@@ -134,6 +134,60 @@ set grepprg=rg\ --vimgrep
 """""""""""""  codefmt  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'msuozzo/vim-codefmt', { 'branch': 'tip' }
 
+"""""""""""""  airline  """""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+let g:airline_theme='minimalist'
+
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.spell = '✓'
+let g:airline_symbols.linenr = '═'
+let g:airline_symbols.colnr = '‖'
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#overflow_marker = ' …'
+
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_detect_spelllang=0
+
+let g:airline_mode_map = {
+\ '__' : '-',
+\ 'n' : 'N',
+\ 'i' : 'I',
+\ 'R' : 'R',
+\ 'c' : 'C',
+\ 'v' : 'V',
+\ 'V' : 'V',
+\ 's' : 'S',
+\ 'S' : 'S',
+\ }
+
+" Tell airline not to display file format
+let g:airline_section_x =''
+" Tell airline not to display fileencoding or fileformat
+let g:airline_section_y =''
+" Remove the file % and widen the line display
+let g:airline_section_z = '%#__accent_bold#%{g:airline_symbols.linenr}%4l%#__restore__#%#__accent_bold#/%L%#__restore__#  %{g:airline_symbols.colnr}%3v'
+
+let g:airline_powerline_fonts = 1
+
+" FIXME: Causing overflow/redraw issues inside tmux
+let g:airline_section_error = ''
+let g:airline_section_warning = ''
+
+let g:airline#extensions#coc#enabled = 1
+
 """""""""""""  signify  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'msuozzo/vim-signify', { 'branch': 'tip' }
 
