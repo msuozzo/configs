@@ -101,9 +101,25 @@ au FileType go nmap <Leader>e <Plug>(go-rename)
 let g:JSHintHighlightErrorLine = 0
 
 """""""""""""   FZF   """""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>r :FZF!<cr>
-nnoremap <leader>t :tabe<cr>:FZF!<cr>
-nnoremap <leader>v :vsp<cr>:FZF!<cr>
+nnoremap <leader>t v:<bs><bs><bs><bs><bs>FZF!<cr>
+nnoremap <leader>/ v:<bs><bs><bs><bs><bs>Rg<cr>
+" ripgrep-based fuzzy finding
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --hidden --follow --ignore-case '
+  \   .'--glob="!*~" '
+  \   .shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+  \   0)
+
+" Override the default actions to make enter open a new tab.
+let g:fzf_action = {'enter': 'tab split'}
+
+" NOTE: https://github.com/junegunn/fzf/issues/2895
+autocmd SwapExists * let v:swapchoice = 'e'
+
+" rg-ify search
+set grepprg=rg\ --vimgrep
 
 """"""""""""""""Regular Vim Settings"""""""""""""""""""""""""""""""""""""""""""
 syntax on
