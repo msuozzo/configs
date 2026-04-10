@@ -134,6 +134,16 @@ set grepprg=rg\ --vimgrep
 """""""""""""  codefmt  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'msuozzo/vim-codefmt', { 'branch': 'tip' }
 
+autocmd FileType c,cpp,proto,js,javascript AutoFormatBuffer clang-format
+autocmd FileType css,json AutoFormatBuffer oxfmt
+autocmd FileType go AutoFormatBuffer gofmt
+" NOTE: This is being set to gofmt and is capturing the 'vgq' motion, trying to format the visual selection as a golang file
+autocmd FileType go setlocal formatprg=
+autocmd FileType markdown oxfmt
+autocmd FileType python AutoFormatBuffer ruff
+autocmd FileType textpb AutoFormatBuffer txtpbfmt
+autocmd FileType yaml oxfmt
+
 """""""""""""  smooth scrolling  """"""""""""""""""""""""""""""""""""""""""""""
 Plug 'terryma/vim-smooth-scroll'
 
