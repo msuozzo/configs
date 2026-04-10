@@ -312,8 +312,8 @@ nnoremap ? q?i
 " Helpful save macro
 nnoremap ,, :w<cr>
 
-" Python docstring shortcut
-nnoremap <leader>c o"""<cr>"""<Esc>ka
+nnoremap ( gT
+nnoremap ) gt
 
 " Disable arrow keys
 noremap  <Up> ""
