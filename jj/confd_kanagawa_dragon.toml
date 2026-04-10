@@ -1,0 +1,131 @@
+[colors]
+# Kanagawa Dragon theme for jj
+# Adapted from https://github.com/rebelot/kanagawa.nvim
+
+# Errors and warnings
+"error" = { fg = "#c4746e", bold = true }
+"error_source" = { fg = "#c4746e" }
+"warning" = { fg = "#c4b28a", bold = true }
+"hint" = { fg = "#8ba4b0" }
+"error heading" = { fg = "#c4746e", bold = true }
+"error_source heading" = { bold = true }
+"warning heading" = { fg = "#c4b28a", bold = true }
+"hint heading" = { fg = "#8ea4a2", bold = true }
+
+# Conflicts
+"conflict_description" = "#c4b28a"
+"conflict_description difficult" = "#c4746e"
+
+# Commit and change IDs
+"commit_id" = "#8ba4b0"
+"change_id" = "#938aa9"
+
+# Prefixes and rest
+"prefix" = { bold = true }
+"rest" = "#625e5a"
+"change_offset" = { bold = true }
+"hidden prefix" = "default"
+
+# Metadata
+"author" = "#c4b28a"
+"committer" = "#c4b28a"
+"timestamp" = "#8ea4a2"
+"working_copies" = "#87a987"
+"bookmark" = "#a292a3"
+"bookmarks" = "#a292a3"
+"local_bookmarks" = "#a292a3"
+"remote_bookmarks" = "#a292a3"
+"tag" = "#a292a3"
+"tags" = "#a292a3"
+"git_ref" = "#87a987"
+"git_refs" = "#87a987"
+"git_head" = "#87a987"
+"divergent" = "#a292a3"
+"mutable divergent" = "#c4746e"
+"mutable divergent change_id" = "#c4746e"
+"conflict" = "#c4746e"
+"empty" = "#87a987"
+"placeholder" = "#c4746e"
+"description placeholder" = "#c4b28a"
+"empty description placeholder" = "#87a987"
+"separator" = "#625e5a"
+"elided" = "#625e5a"
+"root" = "#87a987"
+
+# Working copy (brighter variants)
+"working_copy" = { bold = true }
+"working_copy commit_id" = "#949fb5"
+"working_copy change_id" = "#938AA9"
+"working_copy author" = "#c4b28a"
+"working_copy committer" = "#c4b28a"
+"working_copy timestamp" = "#7FB4CA"
+"working_copy working_copies" = "#76946A"
+"working_copy bookmark" = "#938AA9"
+"working_copy bookmarks" = "#938AA9"
+"working_copy local_bookmarks" = "#938AA9"
+"working_copy remote_bookmarks" = "#938AA9"
+"working_copy tag" = "#938AA9"
+"working_copy tags" = "#938AA9"
+"working_copy git_ref" = "#76946A"
+"working_copy git_refs" = "#76946A"
+"working_copy divergent" = "#938AA9"
+"working_copy mutable divergent" = "#E46876"
+"working_copy mutable divergent change_id" = "#E46876"
+"working_copy conflict" = "#E46876"
+"working_copy empty" = "#76946A"
+"working_copy placeholder" = "#E46876"
+"working_copy description placeholder" = "#c4b28a"
+"working_copy empty description placeholder" = "#76946A"
+
+# Config list
+"config_list name" = "#87a987"
+"config_list value" = "#c4b28a"
+"config_list source" = "#8ba4b0"
+"config_list path" = "#a292a3"
+"config_list overridden" = "#625e5a"
+"config_list overridden name" = "#625e5a"
+"config_list overridden value" = "#625e5a"
+"config_list overridden source" = "#625e5a"
+"config_list overridden path" = "#625e5a"
+
+# Diff
+"diff header" = "#c4b28a"
+"diff empty" = "#8ea4a2"
+"diff binary" = "#8ea4a2"
+"diff file_header" = { bold = true }
+"diff hunk_header" = "#8ea4a2"
+"diff context line_number" = { dim = true }
+"diff removed" = { fg = "#c4746e" }
+"diff added" = { fg = "#87a987" }
+"diff token" = { underline = true }
+"diff modified" = "#8ea4a2"
+"diff untracked" = "#a292a3"
+"diff renamed" = "#8ea4a2"
+"diff copied" = "#87a987"
+"diff access-denied" = { bg = "#c4746e" }
+
+# Operations
+"operation id" = "#938aa9"
+"operation user" = "#c4b28a"
+"operation time" = "#8ea4a2"
+"operation tags" = "#a292a3"
+"operation current_operation" = { bold = true }
+"operation current_operation id" = "#949fb5"
+"operation current_operation user" = "#c4b28a"
+"operation current_operation time" = "#7FB4CA"
+"operation current_operation tags" = "#938AA9"
+
+# Graph nodes
+"node elided" = { fg = "#625e5a" }
+"node working_copy" = { fg = "#87a987", bold = true }
+"node current_operation" = { fg = "#87a987", bold = true }
+"node immutable" = { fg = "#7fb4ca", bold = true }
+"node conflicted" = { fg = "#c4746e", bold = true }
+
+# Signatures
+"signature display" = "#c4b28a"
+"signature key" = "#8ea4a2"
+"signature status good" = "#87a987"
+"signature status unknown" = "#c4b28a"
+"signature status bad" = "#c4746e"
+"signature status invalid" = "#c4746e"
