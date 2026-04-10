@@ -18,8 +18,8 @@ for p in ${config_dir}/confd_*.toml; do
 done
 mkdir -p "${HOME}/.vim/colors/"
 ln -f --symbolic \
-  "${config_dir}/kanagawa_dragon.vim" \
-  "${HOME}/.vim/colors/kanagawa_dragon.vim"
+  "${config_dir}/kanagawa-dragon.vim" \
+  "${HOME}/.vim/colors/kanagawa-dragon.vim"
 
 ## FZF
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
