@@ -134,6 +134,19 @@ set grepprg=rg\ --vimgrep
 """""""""""""  codefmt  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'msuozzo/vim-codefmt', { 'branch': 'tip' }
 
+"""""""""""""  dir UI  """"""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'justinmk/vim-dirvish'
+
+nnoremap <leader>- <Plug>(dirvish_up)
+nnoremap <leader>= :tab split<CR><Plug>(dirvish_up)
+
+augroup dirvish_config
+  " Map `t` to open in new tab.
+  autocmd FileType dirvish
+    \  nnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+    \ |xnoremap <silent><buffer> t :call dirvish#open('tabedit', 0)<CR>
+augroup END
+
 """""""""""""  airline  """""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
