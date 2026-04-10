@@ -1,7 +1,6 @@
 # General Bash configs
 
 ## builtin Aliases
-shopt -s expand_aliases
 export CLICOLOR=1
 alias rm='rm -i'
 alias ls='ls --color=auto'
