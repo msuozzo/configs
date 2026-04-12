@@ -111,7 +111,7 @@ let g:coc_user_config = {
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-nnoremap <leader>t v:<bs><bs><bs><bs><bs>FZF!<cr>
+nnoremap <leader>t v:<bs><bs><bs><bs><bs>Files!<cr>
 nnoremap <leader>/ v:<bs><bs><bs><bs><bs>Rg<cr>
 " ripgrep-based fuzzy finding
 command! -bang -nargs=* Rg
