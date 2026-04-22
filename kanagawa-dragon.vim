@@ -145,6 +145,8 @@ function! s:hi(group, fg, bg, attr)
         if has_key(s:cterm, a:bg)
             let l:cmd .= ' ctermbg=' . s:cterm[a:bg]
         endif
+    else
+        let l:cmd .= ' guibg=NONE ctermbg=NONE'
     endif
     if a:attr != ''
         let l:cmd .= ' gui=' . a:attr . ' cterm=' . a:attr
