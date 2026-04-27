@@ -32,6 +32,9 @@ set pastetoggle=<leader>p
 " Enable 24-bit colors
 set termguicolors
 
+" Enable filetype plugin
+filetype plugin indent on
+
 """"""""""""""""  vim-plug  """""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
 Plug 'Raimondi/delimitMate'
@@ -254,13 +257,6 @@ Glaive codefmt gofmt_executable='goimports'
 
 """""""""""""  AutoCommand  """""""""""""""""""""""""""""""""""""""""""""""""""
 if has("autocmd")
-
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
-  filetype plugin on
 
   " Put these in an autocmd group, so that we can delete them easily.
   augroup vimrcEx
