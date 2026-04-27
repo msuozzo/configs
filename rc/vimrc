@@ -35,6 +35,7 @@ set termguicolors
 """"""""""""""""  vim-plug  """""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
 Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-repeat'
 Plug 'google/vim-maktaba'
 
 """""""""""""   coc.nvim   """"""""""""""""""""""""""""""""""""""""""""""""""""
