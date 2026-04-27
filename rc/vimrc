@@ -27,6 +27,14 @@ set incsearch
 set history=100
 " Create backups for files
 set backup
+" Store swap files centrally and auto-select default when one exists
+set directory=~/.vim/cache//
+" Auto-reload files changed outside of vim
+set autoread
+augroup auto_checktime
+  au!
+  autocmd FocusGained,BufEnter * silent! checktime
+augroup END
 " Command to toggle paste mode
 set pastetoggle=<leader>p
 " Enable 24-bit colors
