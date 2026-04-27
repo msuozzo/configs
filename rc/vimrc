@@ -87,6 +87,7 @@ if has('nvim')
   inoremap <silent><expr> <c-space> coc#refresh()
 else
   inoremap <silent><expr> <c-@> coc#refresh()
+  map! <Esc>[32;5u <C-@>
 endif
 
 " Make <CR> auto-select the first completion item and notify coc.nvim.
