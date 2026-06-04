@@ -15,6 +15,7 @@ log = "pending() | parents(pending()) | trunk() | remote_heads() | local_heads()
 [aliases]
 forge = ["util", "exec", "--", "go", "run", "github.com/msuozzo/jj-forge/cmd/jj-forge@latest"]
 watch = ["util", "exec", "--", "go", "run", "github.com/msuozzo/uwatch@latest", "jj", "log", "--color=always"]
+hi = ["util", "exec", "--", "jj-highlight"]
 amend = ["squash"]
 
 [revset-aliases]
@@ -51,7 +52,7 @@ current = 'coalesce(@&~description(exact:""), @|@-)'
 [ui]
 graph.style = "ascii"
 editor = "vim"
-default-command = "diff"
+default-command = ["hi", "diff"]
 merge-editor = ":builtin"
 diff-editor = ":builtin"
 
