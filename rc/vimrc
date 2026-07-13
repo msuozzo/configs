@@ -158,6 +158,7 @@ autocmd FileType go setlocal formatprg=
 autocmd FileType markdown AutoFormatBuffer oxfmt
 autocmd FileType python AutoFormatBuffer ruff
 autocmd FileType textpb AutoFormatBuffer txtpbfmt
+autocmd FileType terraform,hcl AutoFormatBuffer terraform-fmt
 autocmd FileType yaml AutoFormatBuffer oxfmt
 
 """""""""""""  smooth scrolling  """"""""""""""""""""""""""""""""""""""""""""""
@@ -265,6 +266,7 @@ call plug#end()                  "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 " Configure with Glaive
 call glaive#Install()
 Glaive codefmt gofmt_executable='goimports'
+Glaive codefmt terraform_executable='tofu'
 
 """""""""""""  AutoCommand  """""""""""""""""""""""""""""""""""""""""""""""""""
 if has("autocmd")
