@@ -16,7 +16,7 @@ for p in ${config_dir}/jj/confd_*.toml; do
     "$p" \
     "${HOME}/.config/jj/conf.d/${fname#confd_}"
 done
-mkdir -p "${HOME}/.vim/colors/"
+mkdir -p "${HOME}/.vim/colors/" "${HOME}/.vim/cache/"
 ln -f -s \
   "${config_dir}/kanagawa-dragon.vim" \
   "${HOME}/.vim/colors/kanagawa-dragon.vim"
