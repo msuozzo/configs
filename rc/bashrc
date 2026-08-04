@@ -34,12 +34,12 @@ alias jjai="jj amend -i"
 alias jjt="jj diff -s"
 jjtt() {
   REV="${1:-current}"
-  jj diff -s --from "parents(roots($REV))" --to "heads($REV)"
+  jj diff -s -r "$REV"
 }
 alias jjd="jj diff"
 jjdd() {
   REV="${1:-current}"
-  jj diff --from "parents(roots($REV))" --to "heads($REV)"
+  jj diff -r "$REV"
 }
 jju() {
   REV="${1:-roots(current)}"
