@@ -7,15 +7,6 @@ alias ls='ls --color=auto'
 alias ll='ls -alFG'
 alias grep='rg'
 cd() { builtin cd "$@" && ll; }
-# realpath: get real, absolute path
-if [[ `uname` -eq 'Darwin' ]]; then
-  function realpath() {
-    python -c "import os; print os.path.realpath(\"$1\")"
-  }
-  alias realpath=realpath
-else
-  alias realpath='readlink -f'
-fi
 
 ## FZF
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'
