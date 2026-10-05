@@ -122,7 +122,8 @@ jjco() {  # checkout: fresh empty @ on top of target
 }
 jjrb() {  # rebase subtree SRC onto DEST
   if [[ "$1" == "" ]] || [[ "$2" == "" ]]; then
-    exit 1
+    echo 'Usage: jjrb <SRC> <DEST>'
+    return 1
   fi
   jj rebase -s "${1}" -d "${2}"
 }
