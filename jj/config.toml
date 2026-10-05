@@ -18,28 +18,9 @@ hi = ["util", "exec", "--", "jj-highlight"]
 amend = ["squash"]
 
 [revset-aliases]
-"local_heads()" = '''
-  bookmarks(exact:"main") |
-  bookmarks(exact:"master") |
-  bookmarks(exact:"trunk")
-'''
-"remote_heads()" = 'origin_head() | upstream_head()'
-"origin_head()" = '''
-  remote_bookmarks(exact:"main", exact:"og") |
-  remote_bookmarks(exact:"master", exact:"og") |
-  remote_bookmarks(exact:"trunk", exact:"og") |
-  remote_bookmarks(exact:"main", exact:"origin") |
-  remote_bookmarks(exact:"master", exact:"origin") |
-  remote_bookmarks(exact:"trunk", exact:"origin")
-'''
-"upstream_head()" = '''
-  remote_bookmarks(exact:"main", exact:"up") |
-  remote_bookmarks(exact:"master", exact:"up") |
-  remote_bookmarks(exact:"trunk", exact:"up") |
-  remote_bookmarks(exact:"main", exact:"upstream") |
-  remote_bookmarks(exact:"master", exact:"upstream") |
-  remote_bookmarks(exact:"trunk", exact:"upstream")
-'''
+"local_heads()" = 'bookmarks(regex:"^(main|master|trunk)$")'
+"remote_heads()" = 'remote_bookmarks(regex:"^(main|master|trunk)$", regex:"^(og|origin|up|upstream)$")'
+# Fallback for og/up-named remotes without a repo-level trunk() pin.
 "trunk()" = "latest(remote_heads() | root())"
 t = "latest(heads(trunk()::~@))"
 h = "heads(::@ & remote_heads())"
