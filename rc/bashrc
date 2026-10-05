@@ -36,10 +36,10 @@ jjtt() {
   REV="${1:-current}"
   jj diff -s -r "$REV"
 }
-alias jjd="jj diff"
+alias jjd="jj hi diff"
 jjdd() {
   REV="${1:-current}"
-  jj diff -r "$REV"
+  jj hi diff -r "$REV" "${@:2}"
 }
 jju() {
   REV="${1:-roots(current)}"
