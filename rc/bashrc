@@ -122,6 +122,10 @@ jjrb() {
   fi
   jj rebase -s "${1}" -d "${2}"
 }
+jjk() {
+    REV="${1:-(mutable()&coalesce(@ ~ empty(), @-))}"
+    jj rebase -r "${REV}" -B 'children('"${REV}"')~('"${REV}"')' -A 'latest(immutable()&::('"${REV}"'))'
+}
 jjq() {
   FROM="${1:-roots(current)}"
   TO="${2}"
