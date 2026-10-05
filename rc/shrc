@@ -204,10 +204,15 @@ jjmc() {
     jj forge review open --reviewer "${USR}" "${chain}"
   fi
 }
-jjsb() {  # submit: merge the review, then sync what remains
+jjsb() {  # submit: push, wait for CI, merge the review, then sync what remains
   REV="${1:-coalesce(@&~description(exact:''),@-)}"
   # NOTE: REV can become ambiguous after merge. Resolving heads first removes this ambiguity.
   headrevset="$(jj log -r 'latest(immutable()&ancestors('"$REV"'))' -G -T 'change_id.short() ++ "|"')none()"
+  # Push and, if a GitHub change, wait for CI on what was pushed.
+  jj forge review update "${REV}" || return
+  if jj git remote list | grep -q '^up .*github\.com'; then
+    jj forge util actions-status --wait "${REV}" || return
+  fi
   jj forge review merge "${REV}" && \
     jjs "mutable()&children(${headrevset})"
 }
