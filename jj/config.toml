@@ -26,7 +26,6 @@ t = "latest(heads(trunk()::~@))"
 h = "heads(::@ & remote_heads())"
 at = "@"
 current = 'coalesce(@&~description(exact:""), @|@-)'
-"named_head()" = 'heads(::@ & description(glob:"?*"))'
 "pending()" = "mine() & mutable()"
 
 [ui]

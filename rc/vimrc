@@ -240,9 +240,10 @@ let g:airline#extensions#coc#enabled = 1
 Plug 'msuozzo/vim-signify', { 'branch': 'tip' }
 
 let g:signify_skip = {'vcs': {'allow': ['git', 'jj']}}
+" NOTE: jj uses -r, not --from, because --from requires a single revision and the head may be a merge.
 let g:signify_vcs_cmds = {
     \ 'git': 'git diff --no-color --no-ext-diff -U0 -- %f',
-    \ 'jj': 'jj diff --color=never --git --context=0 --from=''parents(named_head()&mutable())|~(named_head()&mutable())&named_head()'' -- %f',
+    \ 'jj': 'jj diff --color=never --git --context=0 -r ''mutable() & ::@ & heads(::@ & description(glob:"?*"))::'' -- %f',
     \ }
 
 """""""""""""  NERDCommenter  """""""""""""""""""""""""""""""""""""""""""""""""
