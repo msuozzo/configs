@@ -124,7 +124,10 @@ jjrb() {
 }
 jjk() {
     REV="${1:-(mutable()&coalesce(@ ~ empty(), @-))}"
-    jj rebase -r "${REV}" -B 'children('"${REV}"')~('"${REV}"')' -A 'latest(immutable()&::('"${REV}"'))'
+    # An empty @ on REV follows it, rather than merging REV with the old chain.
+    kinkrevset="$(jj log -r "${REV}" -G -T 'change_id.short() ++ "|"')none()"
+    jj rebase -r "${REV}" -B 'children('"${REV}"')~('"${REV}"')' -A 'latest(immutable()&::('"${REV}"'))' &&
+        jj rebase -r "@ & empty() & children(${kinkrevset})" -o "${kinkrevset}"
 }
 jjq() {
   FROM="${1:-roots(current)}"
