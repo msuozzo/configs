@@ -198,8 +198,8 @@ jjs() {
   # NOTE: REV can become ambiguous after rebase --skip-emptied. Need to wrap
   # each change with present() to ensure simplify-parents can be evaluated.
   rbrevset="$(jj log -r "roots(immutable()..(${REV}))&mutable()" -G -T 'change_id.short() ++ "|"')none()"
-  jj rebase --skip-emptied -s "${rbrevset}" -d "local_heads()"
-  falliblerevset="$(echo -n "${rbrevset}" | xargs -d'|' printf 'present(%s)|')none()"
+  jj rebase --skip-emptied -s "${rbrevset}" -d "trunk()"
+  falliblerevset="$(echo -n "${rbrevset}" | tr '|' '\0' | xargs -0 printf 'present(%s)|')none()"
   jj simplify-parents -r "mutable()&descendants(${falliblerevset})"
 }
 jjsh() {
