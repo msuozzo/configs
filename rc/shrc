@@ -1,0 +1,225 @@
+#!/bin/sh
+# Interactive aliases and functions for any POSIX shell; each shell's rc sources this.
+# Keep it POSIX sh: no [[ ]], ==, ${@:N}, read -p, echo -n, source, or shopt.
+
+## builtin Aliases
+export CLICOLOR=1
+alias rm='rm -i'
+alias ls='ls --color=auto'
+alias ll='ls -alFG'
+alias grep='rg'
+
+## FZF
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'
+export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+
+## jj
+# Naming grammar: jj + stem + modifier.
+#   repeated letter  include one more change (tt/dd also take [REV], defaulting to `current`)
+#   i                interactive hunk selection
+#   c                chain: every mutable change in ::REV
+#   l                last: also cover the last change, @-
+alias jjn='jjco "@-+ ~ empty()"'  # next: one step up the stack
+alias jjnn='jjco "@-++ ~ empty()"'
+alias jjnnn='jjco "@-+++ ~ empty()"'
+alias jjp='jjco "@--"'  # prev: one step down the stack
+alias jjpp='jjco "@---"'
+alias jjppp='jjco "@----"'
+alias jjcs="jj split -r 'latest(mutable()&ancestors(@)~empty())'"  # change split, from hg csplit
+alias jja="jj amend"  # amend: fold @ into its parent
+alias jjai="jj amend -i"
+alias jjt="jj diff -s"  # sTatus: changed-file summary of @
+jjtt() {  # status of REV
+  REV="${1:-current}"
+  [ $# -gt 0 ] && shift  # drop REV so "$@" holds only the extra args
+  jj diff -s -r "$REV" "$@"
+}
+alias jjd="jj hi diff"  # diff, highlighted
+jjdd() {  # diff of REV
+  REV="${1:-current}"
+  [ $# -gt 0 ] && shift  # drop REV so "$@" holds only the extra args
+  jj hi diff -r "$REV" "$@"
+}
+jjl() { # log
+  REV="${1}"
+  if [ -z "$REV" ]; then
+    jj log
+  else
+    shift  # drop REV so "$@" holds only the extra args
+    jj log -r "$REV" "$@"
+  fi
+}
+jju() {  # upload: refresh the review, then detached presubmit
+  REV="${1:-roots(current)}"
+  BOOKMARK=$(jj log --no-graph -r "$REV" -T 'bookmarks.join("\n")' 2>/dev/null | head -n 1 | tr -d '*')
+  if [ "$BOOKMARK" = "$REV" ]; then
+    jj git push -b "$BOOKMARK"
+  else
+    jj forge review update --skip-check "${REV}"
+    # NOTE: After update so trailer updates don't invalidate check results.
+    jj forge change check --detach "${REV}"
+  fi
+}
+jjuc() {
+  REV="${1:-roots(current)}"
+  jj forge review update --skip-check "::(${REV})&mutable()"
+  # NOTE: After update so trailer updates don't invalidate check results.
+  jj forge change check --detach "::(${REV})&mutable()"
+}
+jjps() {  # presubmit: run forge checks
+  REV="${1:-roots(current)}"
+  jj forge change check "${REV}"
+}
+jjpsc() {
+  REV="${1:-roots(current)}"
+  jj forge change check "::(${REV})&mutable()"
+}
+jjrm() {  # remove: close review, delete bookmark, abandon
+  REV="${1:-roots(current)}"
+  # Resolve to unique change and, if present, bookmark
+  changes=$(jj log -r "$REV" --no-graph -T 'change_id.short() ++ " "')
+  change_count=$(echo "$changes" | wc -w)
+  if [ "$change_count" -eq 0 ]; then
+    echo "rev not found" >&2
+    return 1
+  fi
+  if [ "$change_count" -gt 1 ]; then
+    echo "rev not unique" >&2
+    return 1
+  fi
+  bookmarks=$(jj log -r "$changes" --no-graph -T 'bookmarks.map(|b| b.name()).join(" ")')
+  bookmark_count=$(echo "$bookmarks" | wc -w)
+  if [ "$bookmark_count" -gt 1 ]; then
+    echo "multiple bookmarks found" >&2
+    return 1
+  elif [ "$bookmark_count" -eq 1 ]; then
+    pr_url=$(GIT_DIR=.jj/repo/store/git/ gh pr list --head "$bookmarks" --json url --jq '.[0].url' 2> /dev/null)
+    if [ -n "$pr_url" ]; then
+      echo "Found Pull Request: $pr_url"
+      printf 'CLOSE this PR? (y/N) '
+      read -r REPLY
+      if [ "$REPLY" != y ] && [ "$REPLY" != Y ]; then
+        echo "Operation cancelled."
+        return 0
+      fi
+      if ! jj forge review close --no-cleanup "${REV}"; then
+        echo "Error: Failed to close the pull request." >&2
+        return 1
+      fi
+    fi
+    jj bookmark delete "$bookmarks"
+    # NOTE: If the branch was never pushed, suppress failure.
+    jj git push --bookmark "$bookmarks" || true
+  fi
+  jj abandon "$changes"
+}
+alias jjau="jja && jju"  # amend + upload
+jjua() {  # upload all tracked bookmarks
+  jj git push --tracked
+}
+jjom() {  # open modified files in editor tabs
+  vim -p $(jj diff --name-only -r "${1:-current}")
+}
+jjco() {  # checkout: fresh empty @ on top of target
+  jj new "${1:-heads(current)}"
+}
+jjrb() {  # rebase subtree SRC onto DEST
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    echo 'Usage: jjrb <SRC> <DEST>'
+    return 1
+  fi
+  jj rebase -s "${1}" -d "${2}"
+}
+jjk() {  # kink: pull REV to the bottom of the stack
+    REV="${1:-(mutable()&coalesce(@ ~ empty(), @-))}"
+    # An empty @ on REV follows it, rather than merging REV with the old chain.
+    kinkrevset="$(jj log -r "${REV}" -G -T 'change_id.short() ++ "|"')none()"
+    jj rebase -r "${REV}" -B 'children('"${REV}"')~('"${REV}"')' -A 'latest(immutable()&::('"${REV}"'))' &&
+        jj rebase -r "@ & empty() & children(${kinkrevset})" -o "${kinkrevset}"
+}
+jjq() {  # squash FROM into TO (default: into parent)
+  FROM="${1:-roots(current)}"
+  TO="${2}"
+  if [ -z "$TO" ]; then
+    jj squash -r "$FROM"
+  else
+    jj squash --from "$FROM" --into "$TO"
+  fi
+}
+jjqi() {
+  FROM="${1:-roots(current)}"
+  TO="${2}"
+  if [ -z "$TO" ]; then
+    jj squash --interactive -r "$FROM"
+  else
+    jj squash --interactive --from "$FROM" --into "$TO"
+  fi
+}
+jjcm() {  # commit -m
+  jj commit -m "$*"
+}
+jjcmi() {
+  jj commit -i -m "$*"
+}
+jjrw() {  # reword: describe the current change
+  REV="${1:-coalesce(@ ~ empty(), @-)}"
+  if [ -z "$REV" ]; then
+    echo 'Usage: jjrw <REV>'
+    return 1
+  fi
+  jj describe "${REV}"
+}
+jjra() {  # revert all files (bare jjr would take paths)
+  jj restore --from @-
+}
+jjral() {
+  jj restore --from @--
+}
+jjri() {
+  jj restore -i --from @-
+}
+jjril() {
+  jj restore -i --from @--
+}
+jjm() {  # mail: open review for REV [reviewer]
+  REV="${1:-@-}"
+  USR="${2}"
+  if [ -z "$USR" ]; then
+    jj forge review open "${REV}"
+  else
+    jj forge review open --reviewer "${USR}" "${REV}"
+  fi
+}
+jjmc() {
+  REV="${1:-@-}"
+  USR="${2}"
+  chain="::($REV)&mutable()"
+  if [ -z "$USR" ]; then
+    jj forge review open "${chain}"
+  else
+    jj forge review open --reviewer "${USR}" "${chain}"
+  fi
+}
+jjsb() {  # submit: merge the review, then sync what remains
+  REV="${1:-coalesce(@&~description(exact:''),@-)}"
+  # NOTE: REV can become ambiguous after merge. Resolving heads first removes this ambiguity.
+  headrevset="$(jj log -r 'latest(immutable()&ancestors('"$REV"'))' -G -T 'change_id.short() ++ "|"')none()"
+  jj forge review merge "${REV}" && \
+    jjs "mutable()&children(${headrevset})"
+}
+jjs() {  # sync: fetch, rebase onto trunk, simplify-parents
+  REV="${1:-roots(current)}"
+  jj git fetch
+  # NOTE: REV can become ambiguous after rebase --skip-emptied. Need to wrap
+  # each change with present() to ensure simplify-parents can be evaluated.
+  rbrevset="$(jj log -r "roots(immutable()..(${REV}))&mutable()" -G -T 'change_id.short() ++ "|"')none()"
+  jj rebase --skip-emptied -s "${rbrevset}" -d "trunk()"
+  falliblerevset="$(printf '%s' "${rbrevset}" | tr '|' '\0' | xargs -0 printf 'present(%s)|')none()"
+  jj simplify-parents -r "mutable()&descendants(${falliblerevset})"
+}
+jjsh() {  # sync the stack under @
+  jjs 'mutable()&children(latest(immutable()&ancestors(@)))'
+}
+jjwatch() {  # live log (procps watch; `jj watch` is the portable form)
+  watch -t -n .5 --color -x bash -c 'jj log --color always'
+}
