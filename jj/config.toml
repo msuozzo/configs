@@ -2,8 +2,7 @@
 name = "Matthew Suozzo"
 
 [git]
-subprocess = true
-colocate = false
+colocate = false  # defaults to true
 
 [signing]
 behavior = "own"
