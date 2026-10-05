@@ -167,23 +167,23 @@ jjril() {
   jj restore -i --from @--
 }
 jjm() {
-  USR="${1}"
-  REV="${2:-@-}"
+  REV="${1:-@-}"
+  USR="${2}"
   if [[ "$USR" == "" ]]; then
-    jj forge review open --reviewer "${USR}" "${REV}"
-  else 
     jj forge review open "${REV}"
-  fi 
+  else
+    jj forge review open --reviewer "${USR}" "${REV}"
+  fi
 }
 jjmc() {
-  USR="${1}"
-  REV="${2:-@-}"
+  REV="${1:-@-}"
+  USR="${2}"
   chain="::($REV)&mutable()"
   if [[ "$USR" == "" ]]; then
-    jj forge review open --reviewer "${USR}" "${chain}"
-  else 
     jj forge review open "${chain}"
-  fi 
+  else
+    jj forge review open --reviewer "${USR}" "${chain}"
+  fi
 }
 jjsb() {
   REV="${1:-coalesce(@&~description(exact:''),@-)}"
