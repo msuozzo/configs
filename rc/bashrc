@@ -7,3 +7,5 @@
 cd() { builtin cd "$@" && ll; }
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+command -v jj >/dev/null && eval "$(jj util completion bash)"

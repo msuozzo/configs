@@ -4,3 +4,7 @@
 [ -f ~/.shrc ] && . ~/.shrc
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+autoload -U compinit
+compinit
+command -v jj >/dev/null && source <(jj util completion zsh)
