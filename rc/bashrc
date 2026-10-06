@@ -39,7 +39,7 @@ alias jjai="jj amend -i"
 alias jjt="jj diff -s"  # sTatus: changed-file summary of @
 jjtt() {  # status of REV
   REV="${1:-current}"
-  jj diff -s -r "$REV"
+  jj diff -s -r "$REV" "${@:2}"
 }
 alias jjd="jj hi diff"  # diff, highlighted
 jjdd() {  # diff of REV
