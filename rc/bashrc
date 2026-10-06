@@ -46,6 +46,14 @@ jjdd() {  # diff of REV
   REV="${1:-current}"
   jj hi diff -r "$REV" "${@:2}"
 }
+jjl() { # log
+  REV="${1}"
+  if [[ "$REV" == "" ]]; then
+    jj log
+  else
+    jj log -r "$REV" "${@:2}"
+  fi
+}
 jju() {  # upload: refresh the review, then detached presubmit
   REV="${1:-roots(current)}"
   BOOKMARK=$(jj log --no-graph -r "$REV" -T 'bookmarks.join("\n")' 2>/dev/null | head -1 | tr -d '*')
