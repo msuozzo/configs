@@ -1,0 +1,6 @@
+# General Zsh configs
+
+# Portable aliases and functions.
+[ -f ~/.shrc ] && . ~/.shrc
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
