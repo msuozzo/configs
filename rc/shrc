@@ -2,6 +2,9 @@
 # Interactive aliases and functions for any POSIX shell; each shell's rc sources this.
 # Keep it POSIX sh: no [[ ]], ==, ${@:N}, read -p, echo -n, source, or shopt.
 
+## PATH
+export PATH="$HOME/go/bin:$PATH"
+
 ## builtin Aliases
 export CLICOLOR=1
 alias rm='rm -i'
