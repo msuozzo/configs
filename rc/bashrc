@@ -30,25 +30,28 @@ alias jjai="jj amend -i"
 alias jjt="jj diff -s"  # sTatus: changed-file summary of @
 jjtt() {  # status of REV
   REV="${1:-current}"
-  jj diff -s -r "$REV" "${@:2}"
+  [ $# -gt 0 ] && shift  # drop REV so "$@" holds only the extra args
+  jj diff -s -r "$REV" "$@"
 }
 alias jjd="jj hi diff"  # diff, highlighted
 jjdd() {  # diff of REV
   REV="${1:-current}"
-  jj hi diff -r "$REV" "${@:2}"
+  [ $# -gt 0 ] && shift  # drop REV so "$@" holds only the extra args
+  jj hi diff -r "$REV" "$@"
 }
 jjl() { # log
   REV="${1}"
-  if [[ "$REV" == "" ]]; then
+  if [ -z "$REV" ]; then
     jj log
   else
-    jj log -r "$REV" "${@:2}"
+    shift  # drop REV so "$@" holds only the extra args
+    jj log -r "$REV" "$@"
   fi
 }
 jju() {  # upload: refresh the review, then detached presubmit
   REV="${1:-roots(current)}"
-  BOOKMARK=$(jj log --no-graph -r "$REV" -T 'bookmarks.join("\n")' 2>/dev/null | head -1 | tr -d '*')
-  if [[ "$BOOKMARK" == "$REV" ]]; then
+  BOOKMARK=$(jj log --no-graph -r "$REV" -T 'bookmarks.join("\n")' 2>/dev/null | head -n 1 | tr -d '*')
+  if [ "$BOOKMARK" = "$REV" ]; then
     jj git push -b "$BOOKMARK"
   else
     jj forge review update --skip-check "${REV}"
@@ -75,31 +78,30 @@ jjrm() {  # remove: close review, delete bookmark, abandon
   # Resolve to unique change and, if present, bookmark
   changes=$(jj log -r "$REV" --no-graph -T 'change_id.short() ++ " "')
   change_count=$(echo "$changes" | wc -w)
-  if [[ $change_count -eq 0 ]]; then
+  if [ "$change_count" -eq 0 ]; then
     echo "rev not found" >&2
     return 1
   fi
-  if [[ $change_count -gt 1 ]]; then
+  if [ "$change_count" -gt 1 ]; then
     echo "rev not unique" >&2
     return 1
   fi
   bookmarks=$(jj log -r "$changes" --no-graph -T 'bookmarks.map(|b| b.name()).join(" ")')
   bookmark_count=$(echo "$bookmarks" | wc -w)
-  if [[ $bookmark_count -gt 1 ]]; then
+  if [ "$bookmark_count" -gt 1 ]; then
     echo "multiple bookmarks found" >&2
     return 1
-  elif [[ $bookmark_count -eq 1 ]]; then
+  elif [ "$bookmark_count" -eq 1 ]; then
     pr_url=$(GIT_DIR=.jj/repo/store/git/ gh pr list --head "$bookmarks" --json url --jq '.[0].url' 2> /dev/null)
-    if [[ "$pr_url" != "" ]]; then
+    if [ -n "$pr_url" ]; then
       echo "Found Pull Request: $pr_url"
-      read -p "CLOSE this PR? (y/N) " -n 1 -r
-      echo
-      if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
+      printf 'CLOSE this PR? (y/N) '
+      read -r REPLY
+      if [ "$REPLY" != y ] && [ "$REPLY" != Y ]; then
         echo "Operation cancelled."
         return 0
       fi
-      jj forge review close --no-cleanup "${REV}"
-      if [[ $? -ne 0 ]]; then
+      if ! jj forge review close --no-cleanup "${REV}"; then
         echo "Error: Failed to close the pull request." >&2
         return 1
       fi
@@ -121,7 +123,7 @@ jjco() {  # checkout: fresh empty @ on top of target
   jj new "${1:-heads(current)}"
 }
 jjrb() {  # rebase subtree SRC onto DEST
-  if [[ "$1" == "" ]] || [[ "$2" == "" ]]; then
+  if [ -z "$1" ] || [ -z "$2" ]; then
     echo 'Usage: jjrb <SRC> <DEST>'
     return 1
   fi
@@ -137,7 +139,7 @@ jjk() {  # kink: pull REV to the bottom of the stack
 jjq() {  # squash FROM into TO (default: into parent)
   FROM="${1:-roots(current)}"
   TO="${2}"
-  if [[ "$TO" == "" ]]; then
+  if [ -z "$TO" ]; then
     jj squash -r "$FROM"
   else
     jj squash --from "$FROM" --into "$TO"
@@ -146,7 +148,7 @@ jjq() {  # squash FROM into TO (default: into parent)
 jjqi() {
   FROM="${1:-roots(current)}"
   TO="${2}"
-  if [[ "$TO" == "" ]]; then
+  if [ -z "$TO" ]; then
     jj squash --interactive -r "$FROM"
   else
     jj squash --interactive --from "$FROM" --into "$TO"
@@ -160,7 +162,7 @@ jjcmi() {
 }
 jjrw() {  # reword: describe the current change
   REV="${1:-coalesce(@ ~ empty(), @-)}"
-  if [[ "$REV" == "" ]]; then
+  if [ -z "$REV" ]; then
     echo 'Usage: jjrw <REV>'
     return 1
   fi
@@ -181,7 +183,7 @@ jjril() {
 jjm() {  # mail: open review for REV [reviewer]
   REV="${1:-@-}"
   USR="${2}"
-  if [[ "$USR" == "" ]]; then
+  if [ -z "$USR" ]; then
     jj forge review open "${REV}"
   else
     jj forge review open --reviewer "${USR}" "${REV}"
@@ -191,7 +193,7 @@ jjmc() {
   REV="${1:-@-}"
   USR="${2}"
   chain="::($REV)&mutable()"
-  if [[ "$USR" == "" ]]; then
+  if [ -z "$USR" ]; then
     jj forge review open "${chain}"
   else
     jj forge review open --reviewer "${USR}" "${chain}"
@@ -211,7 +213,7 @@ jjs() {  # sync: fetch, rebase onto trunk, simplify-parents
   # each change with present() to ensure simplify-parents can be evaluated.
   rbrevset="$(jj log -r "roots(immutable()..(${REV}))&mutable()" -G -T 'change_id.short() ++ "|"')none()"
   jj rebase --skip-emptied -s "${rbrevset}" -d "trunk()"
-  falliblerevset="$(echo -n "${rbrevset}" | tr '|' '\0' | xargs -0 printf 'present(%s)|')none()"
+  falliblerevset="$(printf '%s' "${rbrevset}" | tr '|' '\0' | xargs -0 printf 'present(%s)|')none()"
   jj simplify-parents -r "mutable()&descendants(${falliblerevset})"
 }
 jjsh() {  # sync the stack under @
