@@ -8,6 +8,7 @@ alias rm='rm -i'
 alias ls='ls --color=auto'
 alias ll='ls -alFG'
 alias grep='rg'
+alias v='vim'
 
 ## FZF
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow'
