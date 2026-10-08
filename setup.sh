@@ -22,4 +22,4 @@ ln -f -s \
   "${HOME}/.vim/colors/kanagawa-dragon.vim"
 
 ## FZF
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+[ -d "${HOME}/.fzf" ] || git clone --depth 1 https://github.com/junegunn/fzf.git "${HOME}/.fzf"
