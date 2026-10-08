@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
 ## RC
-config_dir=$(dirname "$(readlink -f "$0")")
+config_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 for f in rc/shrc rc/bashrc rc/zshrc rc/vimrc rc/ignore git/gitconfig git/gitignore; do
   ln -f -s \
     "${config_dir}/${f}" \
@@ -9,7 +9,7 @@ for f in rc/shrc rc/bashrc rc/zshrc rc/vimrc rc/ignore git/gitconfig git/gitigno
 done
 mkdir -p "${HOME}/.config/jj"
 ln -f -s "${config_dir}/jj/config.toml" "${HOME}/.config/jj/config.toml"
-for p in ${config_dir}/jj/confd_*.toml; do
+for p in "${config_dir}"/jj/confd_*.toml; do
   mkdir -p "${HOME}/.config/jj/conf.d/"
   fname=$(basename "$p")
   ln -f -s \
